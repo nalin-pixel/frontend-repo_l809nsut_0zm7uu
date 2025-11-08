@@ -3,6 +3,7 @@ import Hero3D from './components/Hero3D';
 import SwipeTransactions from './components/SwipeTransactions';
 import CategoryManager from './components/CategoryManager';
 import RulesBuilder from './components/RulesBuilder';
+import TransactionsList from './components/TransactionsList';
 
 function App() {
   // Seed categories
@@ -80,6 +81,10 @@ function App() {
     return pendingList.map(applyCategoryByRules);
   }, [transactions, rules, reviewed]);
 
+  const displayedTransactions = useMemo(() => {
+    return transactions.map(applyCategoryByRules);
+  }, [transactions, rules]);
+
   const handleDecision = ({ id, type }) => {
     // On confirm, keep rule-applied category; on skip, do nothing.
     setReviewed((prev) => new Set(prev).add(id));
@@ -101,8 +106,9 @@ function App() {
         <Hero3D />
 
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-6">
             <SwipeTransactions transactions={queue} onDecision={handleDecision} />
+            <TransactionsList items={displayedTransactions} />
           </div>
           <div className="space-y-6">
             <CategoryManager
